@@ -1,47 +1,57 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from 
+
+const initialState = {
+  user: null,
+  status: 'idle',
+  error: null,
+};
+
  const loginUser = createAsyncThunk(
-  "userAuth",
-  async (userCredential) => {
-    const request = await axios.post(
-      "http://codetentacles-006-site36.htempurl.com/api/api/login",
-      userCredential
-    );
-    const response = await request.data.data;
-    localStorage.setItem("user", JSON.stringify(response));
-    console.log(response);
-    return response;
+  'auth/loginUser',
+  async (credentials) => {
+    try {
+      const response = await fetch('http://codetentacles-006-site36.htempurl.com/api/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+      
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const user = await response.json();
+      return user;
+    } catch (error) {
+      throw new Error('Login failed');
+    }
   }
 );
-const userSlice = createSlice({
-  name: "user",
-  initialState: {
-    loading: false,
-    user: null,
-    error: null,
-  },
 
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.user = null;
-        console.log(action.error.message);
-        if (action.error.message === "Request failed with status code 401") {
-          state.error = "Access Denied! Invalid Credentials";
-        } else {
-          state.error = action.error.message;
-        }
-      });
-  },
-});
-export default userSlice.reducer;
+// const authSlice = createSlice({
+//   name: 'auth',
+//   initialState,
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(loginUser.pending, (state) => {
+//         state.status = 'loading';
+//       })
+//       .addCase(loginUser.fulfilled, (state, action) => {
+//         state.status = 'succeeded';
+//         state.user = action.payload;
+//         state.error = null;
+//       })
+//       .addCase(loginUser.rejected, (state, action) => {
+//         state.status = 'failed';
+//         state.error = action.error.message;
+//       });
+//   },
+// });
+export default loginUser
+// export default authSlice.reducer;
+
+

@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 // import { Link } from "react-router-dom";
-import { useDispatch ,useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import loginUser from "../redux/authSlice/loginUser";
- 
+
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loading, error } = useSelector((state) => state.user);
+  // const { status, error } = useSelector((state) => state.auth);
+  // console.log(error,status,'this is login error')
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleSubmit = (e) => {
-    console.log("this is click");
     e.preventDefault();
-    // console.log([{ email }]);
-    // console.log([{ password }]);
     let userCredential = { email, password };
-    dispatch(loginUser(userCredential)).then((result) => {
-      if (result.payload) {
+    console.log(userCredential);
+ 
+    dispatch(loginUser(userCredential))
+    .then((result) => {
+      const { token } = result.payload;
+      if (result.payload.token) {
+        console.log(result.type, "this is status");
+        console.log(token, "this is token");
+        localStorage.setItem('user', (result.payload.token));
         setEmail("");
         setPassword("");
-        // navigate("/");
+        navigate("/List");
       }
     });
   };
@@ -85,11 +92,11 @@ const Login = () => {
                       
                     >
                       {" "} */}
-                    {loading ? "Loading..." : "Login"}
+                    {/* {loading ? "Loading..." : "Login"} */}
                     <div className="fill-one"></div>
                     {/* </Link>  */}
                   </button>
-                  {error && <div role="alert">{error}</div>}
+                  {/* {error && <div role="alert">{error}</div>} */}
                 </form>
 
                 {/* <div className="pt-8 font-bold text-4xl text-center tracking-wider text-white">{email}</div>
