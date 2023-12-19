@@ -8,17 +8,15 @@ import { userlist } from "../redux/UserListSlice/UserListSlice";
 
 export default function List() {
   const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.list.user);
+  const { status, error } = useSelector((state) => state.list);
+  console.log(data, "this is data atalist");
 
   useEffect(() => {
     let tokenNum = localStorage.getItem("user");
     let token = { token: tokenNum };
     dispatch(userlist(token));
   }, [dispatch]);
-
-  const { data } = useSelector((state) => state.list.user);
-
-  const { status, error } = useSelector((state) => state.list);
-  console.log(data, "this is data atalist");
 
   const columns = [
     {
@@ -63,7 +61,6 @@ export default function List() {
     },
   ];
 
-  
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -82,19 +79,21 @@ export default function List() {
             </h3>
           </div>
         </div>
-        <div className="bg-white">
-          <div className="p-4 rounded-lg dark:border-gray-700 ">
-            <div className="flex justify-end mb-3 p-2">
-              <Link
-                to="/Stepperform"
-                className="rounded-lg px-4 py-2 bg-green-700 text-green-100 hover:bg-green-800 duration-300"
-              >
-                Add
-              </Link>
+        {data && (
+          <div className="bg-white">
+            <div className="p-4 rounded-lg dark:border-gray-700 ">
+              <div className="flex justify-end mb-3 p-2">
+                <Link
+                  to="/Stepperform"
+                  className="rounded-lg px-4 py-2 bg-green-700 text-green-100 hover:bg-green-800 duration-300"
+                >
+                  Add
+                </Link>
+              </div>
+              <Table cols={columns} data={data} />
             </div>
-            <Table cols={columns} data={data} />
           </div>
-        </div>
+        )}
       </Layout>
     </>
   );

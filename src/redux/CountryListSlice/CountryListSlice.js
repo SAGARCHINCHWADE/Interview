@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const userlist = createAsyncThunk("auth/userlist", async (token) => {
-  console.log(token, "token at slice");
-
+export const getCountry = createAsyncThunk("auth/userlist", async (token) => {
   const response = await fetch(
-    "http://codetentacles-006-site36.htempurl.com/api/api/seller-list",
+    "http://codetentacles-006-site36.htempurl.com/api/api/country-list",
     {
       headers: {
         token: `${token.token}`,
@@ -15,35 +13,35 @@ export const userlist = createAsyncThunk("auth/userlist", async (token) => {
   if (!response.ok) {
     throw new Error("Failed to fetch user data");
   }
-  const data = await response.json();
-  return data;
+  const countryList = await response.json();
+  console.log(countryList, "list of country");
+  return countryList;
 });
 
 // Create a slice of the Redux store
-const UserListSlice = createSlice({
-  name: "auth",
-  initialState : {
-    user: {},
+const countryListSlice = createSlice({
+  name: "countryList",
+  initialState: {
+    user: [],
     status: "idle",
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(userlist.pending, (state) => {
+      .addCase(getCountry.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(userlist.fulfilled, (state, action) => {
+      .addCase(getCountry.fulfilled, (state, action) => {
         state.status = "succeeded";
+
         state.user = action.payload;
       })
-      .addCase(userlist.rejected, (state, action) => {
+      .addCase(getCountry.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
 
-// Export the async thunk and reducer
-// export { userlist };
-export default UserListSlice.reducer;
+export default countryListSlice.reducer;
