@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCountry } from "../../redux/CountryListSlice/CountryListSlice";
 import { StateList } from "../../redux/StateList/StateList";
 
-export default function Countrydetails() {
+export default function Countrydetails ( {handCountrydetails}) {
   //selected country
   const [selectedOption, setSelectedOption] = useState(null);
   //country options
@@ -14,6 +14,14 @@ export default function Countrydetails() {
   const [States, setStates] = useState([]);
   //selected States
   const [SelectedState, setSelectedState] = useState(null);
+
+  //
+  const [selectCountryId, setselectCountryId] = useState('');
+  const [StatesId, setselectStatesId] = useState('');
+
+
+
+  
 
   const dispatch = useDispatch();
 
@@ -36,11 +44,13 @@ export default function Countrydetails() {
       let token = { token: tokenNum };
       //get id of selected country
       const { value } = selectedOption;
+      setselectCountryId(selectedOption.value)
       dispatch(StateList({ token, value }))
       .then((e) => {
         // console.log(e.payload.data,'this is data stste')
         let statesofCountry = e.payload.data;
         console.log(statesofCountry,'this is data stste')
+        setselectStatesId(statesofCountry.stateId)
 
         const formateState = statesofCountry.map((e) => ({
           value: e.stateId,
@@ -52,14 +62,18 @@ export default function Countrydetails() {
   }, [selectedOption]);
 
   const handleChangeCountry = (selected) => {
-    console.log(selected, "at hansle");
+    console.log(selected, "at select country");
     setSelectedOption(selected);
+    
+
   };
 
   const handleChangeState = (selected) => {
     console.log(selected, "at handleChangeState");
-    setSelectedState(selected);
+    setSelectedState(selected.value);
   };
+
+  handCountrydetails({selectCountryId,StatesId})
 
   return (
     <>

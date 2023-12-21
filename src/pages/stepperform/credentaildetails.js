@@ -1,30 +1,23 @@
 import React from "react";
 import { useState } from "react";
 
-export default function Credentaildetails() {
+
+export default function Credentaildetails({ handleCredentaildetails }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
-  if (!email || !password || !confirmPassword) {
-    setError("All fields are required");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
-
+    handleCredentaildetails({ email, password, confirmPassword });
+ 
   return (
     <>
       <div className="flex   w-full p-2 ">
         <div className=" w-full">
           <h1 className="block text-left w-full text-gray-800 text-2xl font-bold mb-6">
             Credentails Details
-          </h1>
-          <form action="/" method="post">
+          </h1>  
+          <form action="/" method="post" >
             <div className="mb-4">
               <label
                 className="block mb-2 text-sm font-medium text-gray-700 text-left"
@@ -74,7 +67,7 @@ export default function Credentaildetails() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-              <div>{error}</div>
+              {/* <div>{error}</div> */}
             </div>
           </form>
         </div>

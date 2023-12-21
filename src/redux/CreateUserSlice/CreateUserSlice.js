@@ -1,16 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  user: null,
+  status: 'idle',
+  error: null,
+};
 
- const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async (credentials) => {
+ const CreateUserSlice = createAsyncThunk(
+  'Create-user-imformation',
+  async ({UserData,token}) => {
     try {
-      const response = await fetch('http://codetentacles-006-site36.htempurl.com/api/api/login', {
+          console.log(UserData,'this is userdata syntax')
+      const response = await fetch('http://codetentacles-006-site36.htempurl.com/api/api/seller-create?name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          token: `${token.token}`,
+
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify(UserData),
       });
       
 
@@ -46,7 +54,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 //       });
 //   },
 // });
-export default loginUser
+export default CreateUserSlice
 // export default authSlice.reducer;
 
 

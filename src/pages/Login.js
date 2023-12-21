@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import loginUser from "../redux/authSlice/loginUser";
 
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setloading] = useState(false);
+
 
   // const { status, error } = useSelector((state) => state.auth);
   // console.log(error,status,'this is login error')
@@ -19,17 +20,17 @@ const Login = () => {
     e.preventDefault();
     let userCredential = { email, password };
     console.log(userCredential);
- 
-    dispatch(loginUser(userCredential))
-    .then((result) => {
+
+    dispatch(loginUser(userCredential)).then((result) => {
       const { token } = result.payload;
       if (result.payload.token) {
         console.log(result.type, "this is status");
         console.log(token, "this is token");
-        localStorage.setItem('user', (result.payload.token));
+        localStorage.setItem("user", result.payload.token);
         setEmail("");
         setPassword("");
-        navigate("/List");
+        // navigate("/List");
+        setloading(false)
       }
     });
   };
@@ -84,17 +85,10 @@ const Login = () => {
                   <button
                     className="mb-6 text-center w-full px-4 py-3 font-bold tracking-wider text-[#000] rounded-lg bg-white focus:outline-none focus:shadow-outline"
                     type="submit"
+                    onClick={()=>setloading(true)}
                   >
-                    {/* <Link
-                      to="/List"
-                      
-                      className="w-full px-4 py-3 font-bold tracking-wider text-[#000] rounded-lg bg-white focus:outline-none focus:shadow-outline"
-                      
-                    >
-                      {" "} */}
-                    {/* {loading ? "Loading..." : "Login"} */}
+                    {loading ? "Loading..." : "Login"}
                     <div className="fill-one"></div>
-                    {/* </Link>  */}
                   </button>
                   {/* {error && <div role="alert">{error}</div>} */}
                 </form>

@@ -1,15 +1,17 @@
 import React from "react";
 import { useState } from "react";
 
-const Personaldetails = () => {
-  const [Gender, setGender] = useState("male");
+const Personaldetails = ({handlePersonaldetails}) => {
+  const [Gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
 
   const handleGenderchange = (e) => {
-    setGender(e.target.value);
+        setGender(e.target.value);
     console.log(Gender, "the gender");
   };
+  
+  handlePersonaldetails({Gender,phone,name});
 
   return (
     <>
@@ -75,7 +77,7 @@ const Personaldetails = () => {
                     <input
                       id="default-radio-1"
                       type="radio"
-                      value="male"
+                      value="1"
                       name="gender"
                       checked={Gender === "male"}
                       onChange={handleGenderchange}
@@ -92,7 +94,7 @@ const Personaldetails = () => {
                     <input
                       id="default-radio-2"
                       type="radio"
-                      value="female"
+                      value="2"
                       name="gender"
                       checked={Gender === "female"}
                       onChange={handleGenderchange}
@@ -109,7 +111,7 @@ const Personaldetails = () => {
                     <input
                       id="default-radio-2"
                       type="radio"
-                      value="male"
+                      value="3"
                       name="gender"
                       checked={Gender === "other"}
                       onChange={handleGenderchange}

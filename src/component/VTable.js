@@ -189,7 +189,7 @@ const Table = ({
               >
                 <div className="no-data-container">
                   <img
-                    src="/datanotfound.svg"
+                    src={data.image}
                     alt=""
                     className="m-auto"
                     style={{ width: "150px" }}

@@ -9,8 +9,8 @@ export const userlist = createAsyncThunk("auth/userlist", async (token) => {
       headers: {
         token: `${token.token}`,
       },
-    }
-  );
+     
+    });
 
   if (!response.ok) {
     throw new Error("Failed to fetch user data");

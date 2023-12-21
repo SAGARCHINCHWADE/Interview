@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-export default function Skillsdetails() {
+export default function Skillsdetails({handleSkillsdetails}) {
   const [Skill, setSkill] = useState("");
   const [addSkill, setaddSkill] = useState([]);
 
@@ -18,7 +18,9 @@ export default function Skillsdetails() {
       setaddSkill((prevSkill) => [...prevSkill, Skill]);
       setSkill("");
     }
-  };
+  }; 
+
+  handleSkillsdetails({addSkill})
 
   return (
     <>

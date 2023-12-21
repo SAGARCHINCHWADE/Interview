@@ -5,7 +5,9 @@ import Skillsdetails from "./stepperform/skillsdetails";
 import Credentaildetails from "./stepperform/credentaildetails";
 import { Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
 import Layout from "../component/Layout";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import CreateUserSlice from "../redux/CreateUserSlice/CreateUserSlice";
+
 const steps = [
   "Personal Information",
   "Details",
@@ -25,7 +27,24 @@ const initialdata = {
 };
 
 export default function Stepperform() {
+  const [UserData, setUserdata] = useState(initialdata);
+  //final data of user
   const [activeStep, setActiveStep] = useState(0);
+
+  //personal
+  const [gender, setGender] = useState("");
+  const [phone, setphone] = useState("");
+  const [name, setname] = useState("");
+  //country states
+  const [countryId, setselectedCountry] = useState("");
+  const [stateId, setstateId] = useState("");
+  //ADD SKILL
+  const [skills, setaddSkill] = useState([]);
+  //email password
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -34,32 +53,78 @@ export default function Stepperform() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
- 
+
+  const handlePersonaldetails = ({ Gender, phone, name }) => {
+    //handle data from Personaldetails
+    console.log(Gender, phone, name, "Gender, phone, name ");
+    setGender(Gender);
+    setphone(phone);
+    setname(name);
+  };
+
+  const handCountrydetails = ({ selectCountryId, StatesId }) => {
+    //handle data from Countrydetails
+    setselectedCountry(selectCountryId);
+    setstateId(StatesId);
+  };
+  const handleSkillsdetails = ({ addSkill }) => {
+    //handle data from Skillsdetails
+    setaddSkill(addSkill);
+  };
+
+  const handleCredentaildetails = ({ email, password, confirmPassword }) => {
+    //handle data from Credentaildetails
+
+    setemail(email);
+    setpassword(password);
+    //collect all data
+  };
+  const handleSubmit = () => {
+    let tokenNum = localStorage.getItem("user");
+    let token = { token: tokenNum };
+    const usersData = {
+      name: name,
+      profileImage:
+        "http://codetentacles-006-site36.htempurl.com/api/public/Image/202312150649download (14).jfif",
+      gender: gender,
+      phone: phone,
+      countryId: countryId,
+      stateId: 8,
+      email: email,
+      password: password,
+      skills: skills,
+    };
+
+    setUserdata(usersData);
+    dispatch(CreateUserSlice({ UserData, token }));
+  };
 
   const getStepContent = (step) => {
     switch (step) {
       case 0:
         return (
           <>
-            <Personaldetails />
+            <Personaldetails handlePersonaldetails={handlePersonaldetails} />
           </>
         );
       case 1:
         return (
           <>
-            <Countrydetails />
+            <Countrydetails handCountrydetails={handCountrydetails} />
           </>
         );
       case 2:
         return (
           <>
-            <Skillsdetails />
+            <Skillsdetails handleSkillsdetails={handleSkillsdetails} />
           </>
         );
       case 3:
         return (
           <>
-            <Credentaildetails />
+            <Credentaildetails
+              handleCredentaildetails={handleCredentaildetails}
+            />
           </>
         );
       default:
@@ -96,12 +161,13 @@ export default function Stepperform() {
                   <Typography variant="h5" className="mt-10 mb-10 pb-10">
                     Thank you for submitting the form!
                   </Typography>
-                  <Link
+                  <button
                     to="/List"
+                    onClick={handleSubmit}
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                   >
                     View List
-                  </Link>
+                  </button>
                 </div>
               </div>
             ) : (
