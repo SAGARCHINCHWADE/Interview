@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const CreateProduct = createAsyncThunk(
   "AddProductList",
-  async ({ ProductDetails, token }) => {
+  async ({ProductDetails,token }) => {
     console.log(
       token.token,
       "token at slice",

@@ -24,12 +24,20 @@ const Login = () => {
     dispatch(loginUser(userCredential)).then((result) => {
       const { token } = result.payload;
       if (result.payload.token) {
-        console.log(result.type, "this is status");
+      
         console.log(token, "this is token");
         localStorage.setItem("user", result.payload.token);
+        const roletype=result.payload.roleId
         setEmail("");
         setPassword("");
-        // navigate("/List");
+       if(roletype==1){
+        navigate("/List");
+       }
+       if(roletype==2){
+        navigate("/Product");
+       }
+
+        navigate("/List");
         setloading(false)
       }
     });

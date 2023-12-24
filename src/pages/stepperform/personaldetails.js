@@ -1,17 +1,34 @@
 import React from "react";
 import { useState } from "react";
+import { UploadPhotos } from "../../redux/UploadPhoto/UploadPhotos";
+import { useDispatch } from "react-redux";
 
-const Personaldetails = ({handlePersonaldetails}) => {
+const Personaldetails = ({ handlePersonaldetails }) => {
   const [Gender, setGender] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [SelectFile, setSelectFile] = useState("");
+  const [imagePath, setimagePath] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleGenderchange = (e) => {
-        setGender(e.target.value);
+    setGender(e.target.value);
     console.log(Gender, "the gender");
   };
-  
-  handlePersonaldetails({Gender,phone,name});
+
+  const handleImage = (e) => {
+    const files = e.target.files[0];
+    console.log(files, "file at personal details");
+    setSelectFile(files);
+    dispatch(UploadPhotos(SelectFile)).then((e) => {
+      console.log(e.payload, "img path");
+      const imgpath = e.payload;
+      setimagePath(imgpath);
+    });
+  };
+
+  handlePersonaldetails({ Gender, phone, name, imagePath });
 
   return (
     <>
@@ -30,18 +47,36 @@ const Personaldetails = ({handlePersonaldetails}) => {
               </label>
               <div className="mt-1 flex flex-col items-start">
                 <span className="inline-block w-20 h-20 rounded-full overflow-hidden bg-gray-100">
-                  <img
-                    src="https://images.unsplash.com/photo-1531316282956-d38457be0993?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
-                    alt="profilepic"
-                    className="w-100 h-100 m-auto rounded-full shadow"
-                  />
+                  {SelectFile ? (
+                    <div>
+                      <img
+                        src={URL.createObjectURL(SelectFile)}
+                        alt=""
+                        style={{
+                          display: "block",
+                          width: 300,
+                          height: 200,
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <img
+                      src="https://images.unsplash.com/photo-1531316282956-d38457be0993?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80"
+                      alt="profilepic"
+                      className="w-100 h-100 m-auto rounded-full shadow"
+                    />
+                  )}
                 </span>
                 <div className="flex  items-center justify-center bg-grey-lighter">
                   <label className="w-50 flex flex-col items-center px-4 py-2 mt-5 bg-blue-300 text-gray-700 rounded-lg shadow-lg tracking-wide  border border-blue cursor-pointer hover:bg-blue hover:text-white">
                     <span className=" text-base leading-normal">
                       Upload Image
                     </span>
-                    <input type="file" className="hidden" />
+                    <input
+                      type="file"
+                      onClick={handleImage}
+                      className="hidden"
+                    />
                   </label>
                 </div>
               </div>
@@ -61,7 +96,9 @@ const Personaldetails = ({handlePersonaldetails}) => {
                   type="text"
                   name="name"
                   value={name}
-                  onChange={(e)=>{setName(e.target.value)}}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
                   placeholder="Name"
                 />
               </div>
@@ -142,7 +179,9 @@ const Personaldetails = ({handlePersonaldetails}) => {
                   type="number"
                   placeholder="Phone Number"
                   value={phone}
-                  onChange={(e)=>{setPhone(e.target.value)}}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
                 />
               </div>
             </div>

@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const userlist = createAsyncThunk("auth/userlist", async (token) => {
-  console.log(token, "token at slice");
+  console.log(token.token, "token at slice");
 
   const response = await fetch(
     "http://codetentacles-006-site36.htempurl.com/api/api/seller-list",
     {
       headers: {
-        token: `${token.token}`,
+        'content-type':'application/json',
+        token: token.token,
       },
      
     });
@@ -16,6 +17,7 @@ export const userlist = createAsyncThunk("auth/userlist", async (token) => {
     throw new Error("Failed to fetch user data");
   }
   const data = await response.json();
+  console.log(data, 'data at user lidt slice')
   return data;
 });
 

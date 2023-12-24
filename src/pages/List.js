@@ -16,7 +16,7 @@ export default function List() {
     let tokenNum = localStorage.getItem("user");
     let token = { token: tokenNum };
     dispatch(userlist(token));
-  }, [dispatch]);
+  }, []);
 
   const columns = [
     {

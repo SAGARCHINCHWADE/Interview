@@ -12,16 +12,10 @@ export default function Product() {
     let tokenNum = localStorage.getItem("user");
     let token = { token: tokenNum };
     dispatch(AddProduct(token));
-    // .then((e)=>{
-    // console.log(e,'this is product atalist product')
-    // })
   }, []);
   const { data, status, error } = useSelector(
     (state) => state.productList.user
   );
-  // const { status, error } = useSelector((state) => state.list);
-  // console.log(state.list, "this is data atalist");
-  // console.log(useSelector((state) => state.productList.user.data))
 
   const columns = [
     {
@@ -63,43 +57,6 @@ export default function Product() {
       key: "Price",
     },
   ];
-//   if (data) {
-//     const products = data.map((e) => ({
-//       srno: e.productId,
-//       name: e.name,
-//       description: e.description,
-//       Price: e.price,
-//       image: e.imagePath,
-//     }));
-
-  
-//   }
- 
-  
-  //   const data = [
-  //       {
-  //       srno: 1,
-  //       name: "Shirts",
-  //       description:"Lorem ipsum dolor sit amet",
-  //       Price:"Rs.200/-",
-
-  //     },
-  //     {
-  //       srno: 1,
-  //       name: "T-Shirts",
-  //       productimg:"abc@gmail.com",
-  //       description:"Lorem ipsum dolor sit amet",
-  //       Price:"Rs.200/-",
-  //     },
-  //     {
-  //      srno: 1,
-  //       name: "Neha",
-  //       productimg:"abc@gmail.com",
-  //       description:"Lorem ipsum dolor sit amet",
-  //       Price:"Rs.200/-",
-  //     },
-
-  //   ]
 
   if (status === "loading") {
     return <div>Loading...</div>;

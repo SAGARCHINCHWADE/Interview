@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
  const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials) => {
@@ -19,6 +18,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
       }
 
       const user = await response.json();
+      console.log(user,'check the role of user')
       return user;
     } catch (error) {
       throw new Error('Login failed');

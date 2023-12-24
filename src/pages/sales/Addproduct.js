@@ -10,7 +10,7 @@ export default function Addproduct() {
   const [Name, setName] = useState("");
   const [Images, setSelectFile] = useState("");
   const [Description, setDescription] = useState("");
-  const [Price, setPrice] = useState(null);
+  const [Price, setPrice] = useState("");
   const [imgUrlPath, setimagePath] = useState("");
 
   const dispatch = useDispatch();
@@ -18,18 +18,18 @@ export default function Addproduct() {
   let tokenNum = localStorage.getItem("user");
   let token = { token: tokenNum };
 
-  const handleImageChange = async(e) => {
+  const handleImageChange = (e) => {
     const files = e.target.files[0];
     console.log(files);
-    await setSelectFile(files);
-    await dispatch(UploadPhotos(Images)).then((e) => {
+    setSelectFile(files);
+    dispatch(UploadPhotos(Images)).then((e) => {
       console.log(e.payload, "img path");
       const imgpath = e.payload;
       setimagePath(imgpath);
     });
   };
 
-  const handleSubmitPhoto = (e) => {
+  const handleSubmitProduct = (e) => {
     e.preventDefault();
     const ProductDetails = {
       name: Name,
@@ -82,7 +82,7 @@ export default function Addproduct() {
                     >
                       Product Image
                     </label>
-                    <button className="image-upload-button">upload</button>
+
                     <div className="flex items-center justify-center w-full">
                       <label
                         for="dropzone-file"
@@ -182,7 +182,7 @@ export default function Addproduct() {
                     </Link>
                     <button
                       type="button"
-                      onClick={handleSubmitPhoto}
+                      onClick={handleSubmitProduct}
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
                       Submit

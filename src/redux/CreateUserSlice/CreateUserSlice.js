@@ -8,14 +8,14 @@ const initialState = {
 
  const CreateUserSlice = createAsyncThunk(
   'Create-user-imformation',
-  async ({UserData,token}) => {
+  async ({ UserData, token }) => {
     try {
-          console.log(UserData,'this is userdata syntax')
+          console.log(UserData,'this is userdata syntax',token,'token');
       const response = await fetch('http://codetentacles-006-site36.htempurl.com/api/api/seller-create?name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          token: `${token.token}`,
+          token:token.token,
 
         },
         body: JSON.stringify(UserData),
@@ -27,6 +27,7 @@ const initialState = {
       }
 
       const user = await response.json();
+      console.log(user,'user responce')
       return user;
     } catch (error) {
       throw new Error('Login failed');

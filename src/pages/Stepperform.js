@@ -7,6 +7,8 @@ import { Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
 import Layout from "../component/Layout";
 import { useDispatch } from "react-redux";
 import CreateUserSlice from "../redux/CreateUserSlice/CreateUserSlice";
+import { useNavigate } from "react-router-dom";
+
 
 const steps = [
   "Personal Information",
@@ -35,6 +37,8 @@ export default function Stepperform() {
   const [gender, setGender] = useState("");
   const [phone, setphone] = useState("");
   const [name, setname] = useState("");
+  const [imageUrl, setImgUrl] = useState("");
+
   //country states
   const [countryId, setselectedCountry] = useState("");
   const [stateId, setstateId] = useState("");
@@ -45,6 +49,7 @@ export default function Stepperform() {
   const [password, setpassword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate=useNavigate()
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -54,12 +59,13 @@ export default function Stepperform() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handlePersonaldetails = ({ Gender, phone, name }) => {
+  const handlePersonaldetails = ({ Gender, phone, name, imagePath }) => {
     //handle data from Personaldetails
     console.log(Gender, phone, name, "Gender, phone, name ");
     setGender(Gender);
     setphone(phone);
     setname(name);
+    setImgUrl(imagePath);
   };
 
   const handCountrydetails = ({ selectCountryId, StatesId }) => {
@@ -84,8 +90,7 @@ export default function Stepperform() {
     let token = { token: tokenNum };
     const usersData = {
       name: name,
-      profileImage:
-        "http://codetentacles-006-site36.htempurl.com/api/public/Image/202312150649download (14).jfif",
+      profileImage: imageUrl,
       gender: gender,
       phone: phone,
       countryId: countryId,
@@ -94,9 +99,12 @@ export default function Stepperform() {
       password: password,
       skills: skills,
     };
+    console.log(UserData,'user data')
 
     setUserdata(usersData);
-    dispatch(CreateUserSlice({ UserData, token }));
+    dispatch(CreateUserSlice({ UserData, token }).then((e)=>{
+      navigate('/List')
+    }));
   };
 
   const getStepContent = (step) => {
