@@ -1,7 +1,47 @@
 import React from "react";
 import Layout from "../../component/Layout";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { UploadPhotos } from "../../redux/UploadPhoto/UploadPhotos.js";
+import { CreateProduct } from "../../redux/CreateProduct/CreateProduct.js";
+
 export default function Addproduct() {
+  const [Name, setName] = useState("");
+  const [Images, setSelectFile] = useState("");
+  const [Description, setDescription] = useState("");
+  const [Price, setPrice] = useState(null);
+  const [imgUrlPath, setimagePath] = useState("");
+
+  const dispatch = useDispatch();
+
+  let tokenNum = localStorage.getItem("user");
+  let token = { token: tokenNum };
+
+  const handleImageChange = async(e) => {
+    const files = e.target.files[0];
+    console.log(files);
+    await setSelectFile(files);
+    await dispatch(UploadPhotos(Images)).then((e) => {
+      console.log(e.payload, "img path");
+      const imgpath = e.payload;
+      setimagePath(imgpath);
+    });
+  };
+
+  const handleSubmitPhoto = (e) => {
+    e.preventDefault();
+    const ProductDetails = {
+      name: Name,
+      imagePath: imgUrlPath,
+      description: Description,
+      price: +Price,
+    };
+    console.log(ProductDetails, "handle imagepath", Price, "cheak type");
+
+    dispatch(CreateProduct({ ProductDetails, token }));
+  };
+
   return (
     <>
       <Layout>
@@ -29,6 +69,10 @@ export default function Addproduct() {
                       id="firstName"
                       type="text"
                       placeholder="Product Name"
+                      value={Name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                      }}
                     />
                   </div>
                   <div className="mb-4">
@@ -38,41 +82,58 @@ export default function Addproduct() {
                     >
                       Product Image
                     </label>
+                    <button className="image-upload-button">upload</button>
                     <div className="flex items-center justify-center w-full">
                       <label
                         for="dropzone-file"
                         className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 20 16"
-                          >
-                            <path
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                        {Images ? (
+                          <div>
+                            <img
+                              src={URL.createObjectURL(Images)}
+                              alt=""
+                              style={{
+                                display: "block",
+                                width: 300,
+                                height: 200,
+                              }}
                             />
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-semibold">
-                              Click to upload
-                            </span>{" "}
-                            or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            SVG, PNG, JPG or GIF (MAX. 800x400px)
-                          </p>
-                        </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg
+                              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 16"
+                            >
+                              <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                              />
+                            </svg>
+                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                              <span className="font-semibold">
+                                Click to upload
+                              </span>{" "}
+                              or drag and drop
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              SVG, PNG, JPG or GIF (MAX. 800x400px)
+                            </p>
+                          </div>
+                        )}
+
                         <input
                           id="dropzone-file"
                           type="file"
                           className="hidden"
+                          onChange={handleImageChange}
                         />
                       </label>
                     </div>
@@ -87,6 +148,10 @@ export default function Addproduct() {
                     <textarea
                       placeholder="Description"
                       className="w-full px-3 py-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      value={Description}
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
                     />
                   </div>
                   <div className="mb-4">
@@ -99,8 +164,12 @@ export default function Addproduct() {
                     <input
                       className="w-full px-3 py-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                       id="price"
-                      type="text"
+                      type="number"
                       placeholder="Price"
+                      value={Price}
+                      onChange={(e) => {
+                        setPrice(e.target.value);
+                      }}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -113,6 +182,7 @@ export default function Addproduct() {
                     </Link>
                     <button
                       type="button"
+                      onClick={handleSubmitPhoto}
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                     >
                       Submit
